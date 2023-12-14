@@ -1,0 +1,38 @@
+/**
+ * Definition of Interval:
+ * public class Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param schedule: a list schedule of employees
+     * @return: Return a list of finite intervals
+     */
+    public List<Interval> employeeFreeTime(int[][] schedule) {
+        // Write your code here
+        List<Interval> intervals = new ArrayList<>();
+        for (int[] arr : schedule) {
+            for (int i = 0;i < arr.length;i += 2) {
+                intervals.add(new Interval(arr[i], arr[i+1]));
+            }
+        }
+        Collections.sort(intervals, (a, b) -> {
+            return a.start - b.start;
+        });
+        List<Interval> result = new ArrayList<>();
+        int end = intervals.get(0).end;
+        for (int i = 1;i < intervals.size();i++) {
+            if (intervals.get(i).start > end) {
+                result.add(new Interval(end, intervals.get(i).start));
+            }
+            end = Math.max(end, intervals.get(i).end);
+        }
+        return result;
+    }
+}
