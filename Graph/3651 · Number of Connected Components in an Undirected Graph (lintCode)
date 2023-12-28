@@ -1,0 +1,46 @@
+public class Solution {
+    /**
+     * @param n: the number of vertices
+     * @param edges: the edges of undirected graph
+     * @return: the number of connected components
+     */
+
+    public int findParent(int n, int[] parent) {
+        int result = n;
+        while (result != parent[result]) {
+            parent[result] = parent[parent[result]];
+            result = parent[result];
+        }
+        return result;
+    }
+
+    public int union(int a, int b, int[] parent, int[] rank) {
+        int aParent = findParent(a, parent);
+        int bParent = findParent(b, parent);
+        if (aParent == bParent) {
+            return 0;
+        }
+        if (rank[aParent] > rank[bParent]) {
+            parent[bParent] = aParent;
+            rank[aParent] += rank[bParent];
+        } else {
+            parent[aParent] = bParent;
+            rank[bParent] += rank[aParent];
+        }
+        return 1;
+    }
+
+    public int countComponents(int n, int[][] edges) {
+        int[] parent = new int[n];
+        int[] rank = new int[n];
+        for (int i = 0;i < n;i++) {
+            parent[i] = i;
+            rank[i] = 1;
+        }
+        int ans = n;
+        for (int i = 0;i < edges.length;i++) {
+            ans -= union(edges[i][0], edges[i][1], parent, rank);
+        }
+        return ans;
+    }
+}
