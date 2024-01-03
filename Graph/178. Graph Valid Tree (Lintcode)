@@ -1,0 +1,43 @@
+public class Solution {
+    /**
+     * @param n: An integer
+     * @param edges: a list of undirected edges
+     * @return: true if it's a valid tree, or false
+     */
+
+    public boolean dfs (int currNode, int prevNode, boolean[] visited, List<List<Integer>> adjList) {
+        if (visited[currNode]) {
+            return false;
+        }
+        visited[currNode] = true;
+        for (int adjNode : adjList.get(currNode)) {
+            if (adjNode != prevNode) {
+                if (!dfs(adjNode, currNode, visited, adjList)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    public boolean validTree(int n, int[][] edges) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0;i < n;i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] arr : edges) {
+            adjList.get(arr[0]).add(arr[1]);
+            adjList.get(arr[1]).add(arr[0]);
+        }
+        boolean[] visited = new boolean[n];
+        boolean isTree = dfs(0, -1, visited, adjList);
+        int visitedCount = 0;
+        for (int i = 0;i < n;i++) {
+            if (visited[i]) {
+                visitedCount++;
+            }
+        }
+        boolean visitedAllNodes = (visitedCount == n);
+        return (isTree && visitedAllNodes);
+    }
+}
