@@ -1,0 +1,57 @@
+public class Solution {
+    /**
+     * @param n: the number of cities
+     * @param connections: the connection info between cities
+     * @return: nothing
+     */
+
+    class Node implements Comparable<Node> {
+        int dest;
+        int weight;
+        public Node (int dt, int wt) {
+            dest = dt;
+            weight = wt;
+        }
+
+        public int compareTo(Node that) {
+            return this.weight - that.weight;
+        }
+    }
+
+    public int minimumCost(int n, int[][] connections) {
+        List<List<Node>> adjList = new ArrayList<>();
+        for (int i = 0;i <= n;i++) {
+            adjList.add(new ArrayList<>());
+        }
+        for (int[] arr : connections) {
+            adjList.get(arr[0]).add(new Node(arr[1], arr[2]));
+            adjList.get(arr[1]).add(new Node(arr[0], arr[2]));
+        }
+        boolean[] visited = new boolean[n + 1];
+        PriorityQueue<Node> minHeap = new PriorityQueue<>();
+        minHeap.add(new Node(1, 0));
+        int result = 0;
+        while (minHeap.size() > 0) {
+            Node curr = minHeap.remove();
+            int source = curr.dest;
+            if (visited[source]) {
+                continue;
+            }
+            visited[source] = true;
+            result += curr.weight;
+            for (Node adjNode : adjList.get(source)) {
+                minHeap.add(new Node(adjNode.dest, adjNode.weight));
+            }
+        }
+        int visitedCount = 0;
+        for (int i = 1;i <= n;i++) {
+            if (visited[i]) {
+                visitedCount++;
+            }
+        }
+        if (visitedCount < n) {
+            return -1;
+        }
+        return result;
+    }
+}
