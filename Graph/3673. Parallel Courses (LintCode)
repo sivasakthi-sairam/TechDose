@@ -1,0 +1,47 @@
+public class Solution {
+    /**
+     * @param n: the number of courses
+     * @param relations: the relationship between all courses
+     * @return: ehe minimum number of semesters required to complete all courses
+     */
+    public int minimumSemesters(int n, int[][] relations) {
+        List<List<Integer>> adjList = new ArrayList<>();
+        for (int i = 0;i <= n;i++) {
+            adjList.add(new ArrayList<>());
+        }
+        int[] inDegree = new int[n + 1];
+        for (int[] arr : relations) {
+            adjList.get(arr[0]).add(arr[1]);
+            inDegree[arr[1]]++;
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int i = 1;i <= n;i++) {
+            if (inDegree[i] == 0) {
+                queue.add(i);
+            }
+        }
+        boolean[] visited = new boolean[n + 1];
+        int ans = 0;
+        while (queue.size() > 0) {
+            int size = queue.size();
+            for (int i = 0;i < size;i++) {
+                int curr = queue.remove();
+                visited[curr] = true;
+                for (int adjNode : adjList.get(curr)) {
+                    inDegree[adjNode]--;
+                    if (inDegree[adjNode] == 0) {
+                        queue.add(adjNode);
+                    }
+                }
+            }
+            ans++;
+        }
+        int doneCourses = 0;
+        for (int i = 1;i <= n;i++) {
+            if (visited[i]) {
+                doneCourses++;
+            }
+        }
+        return (doneCourses == n) ? ans : -1;
+    }
+}
