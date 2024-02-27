@@ -1,0 +1,42 @@
+public class Solution {
+    /**
+     * @param s: a string
+     * @param t: a string
+     * @return: true if they are both one edit distance apart or false
+     */
+    public boolean isOneEditDistance(String s, String t) {
+        if (s.equals(t)) {
+            return false;
+        }
+        int m = s.length();
+        int n = t.length();
+        int diff = Math.abs(m - n);
+        if (diff > 1) {
+            return false;
+        }
+        if (diff == 0) {
+            for (int i = 0;i < m;i++) {
+                if (s.charAt(i) != t.charAt(i)) {
+                    return (s.substring(0, i).equals(t.substring(0, i)) && s.substring(i+1).equals(t.substring(i+1)));
+                }
+            }
+            return true;
+        } else {
+            String big, small;
+            if (m > n) {
+                big = s;
+                small = t;
+            } else {
+                big = t;
+                small = s;
+            }
+            for (int i = 0;i < small.length();i++) {
+                if (big.charAt(i) != small.charAt(i)) {
+                    String cur = big.substring(0, i) + big.substring(i + 1);
+                    return cur.equals(small);
+                }
+            }
+            return true;
+        }
+    }
+}
